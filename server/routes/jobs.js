@@ -11,12 +11,14 @@ import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
+// Protected routes
+router.get('/my-jobs', auth, getRecruiterJobs);
+
 // Public routes
 router.get('/', getAllJobs);
 router.get('/:id', getJobById);
 
-// Protected routes
-router.get('/my-jobs', auth, getRecruiterJobs);
+// Other protected routes
 router.post('/', auth, createJob);
 router.put('/:id', auth, updateJob);
 router.delete('/:id', auth, deleteJob);
