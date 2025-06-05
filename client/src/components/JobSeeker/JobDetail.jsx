@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import API from '../../api';
+import { toast } from 'react-toastify';
 
 function JobDetail() {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [applying, setApplying] = useState(false);
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -22,6 +27,30 @@ function JobDetail() {
 
     fetchJob();
   }, [id]);
+
+  const handleApply = async () => {
+    if (!user) {
+      toast.error('Please login to apply for jobs');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      setApplying(true);
+      await API.post('/applications', {
+        jobId: id,
+        resume: 'Sample Resume', // In a real app, this would be a file upload
+        coverLetter: 'Sample Cover Letter' // In a real app, this would be user input
+      });
+      
+      toast.success('Application submitted successfully!');
+      navigate('/applied-jobs');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to submit application');
+    } finally {
+      setApplying(false);
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -47,7 +76,13 @@ function JobDetail() {
             ))}
           </ul>
         </div>
-        <button className="btn">Apply Now</button>
+        <button 
+          className={`btn ${applying ? 'opacity-50 cursor-not-allowed' : ''}`}
+          onClick={handleApply}
+          disabled={applying}
+        >
+          {applying ? 'Submitting...' : 'Apply Now'}
+        </button>
       </div>
     </div>
   );
