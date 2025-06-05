@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import API from '../../api';
 
 function JobList() {
@@ -12,11 +11,11 @@ function JobList() {
     const fetchJobs = async () => {
       try {
         const response = await API.get('/jobs');
+        console.log('API Response:', response.data); // Debug log
         setJobs(response.data);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching jobs:', err);
-        toast.error('Failed to fetch jobs');
+        console.error('Error fetching jobs:', err); // Debug log
         setError('Failed to fetch jobs');
         setLoading(false);
       }
