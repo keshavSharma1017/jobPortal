@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../../client/src/context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -18,7 +18,7 @@ function Navbar() {
             {user ? (
               <>
                 {user.role === 'recruiter' && (
-                  <Link to="/recruiter/dashboard\" className="text-gray-600 hover:text-gray-900 px-3 py-2">
+                  <Link to="/recruiter/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2">
                     Dashboard
                   </Link>
                 )}

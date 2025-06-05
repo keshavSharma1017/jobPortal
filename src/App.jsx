@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from '../client/src/context/AuthContext';
-import Navbar from '../client/src/components/Layout/Navbar';
-import Footer from '../client/src/components/Layout/Footer';
-import Login from '../client/src/components/Auth/Login';
-import Register from '../client/src/components/Auth/Register';
-import JobList from '../client/src/components/JobSeeker/JobList';
-import JobDetail from '../client/src/components/JobSeeker/JobDetail';
-import AppliedJobs from '../client/src/components/JobSeeker/AppliedJobs';
-import RecruiterDashboard from '../client/src/components/Recruiter/Dashboard';
-import AdminDashboard from '../client/src/components/Admin/Dashboard';
-import '../client/src/styles/index.css';
+import { AuthProvider } from './context/AuthContext';
+import Navbar from './components/Layout/Navbar';
+import Footer from './components/Layout/Footer';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import JobList from './components/JobSeeker/JobList';
+import JobDetail from './components/JobSeeker/JobDetail';
+import AppliedJobs from './components/JobSeeker/AppliedJobs';
+import RecruiterDashboard from './components/Recruiter/Dashboard';
+import AdminDashboard from './components/Admin/Dashboard';
+import './styles/index.css';
 
 function App() {
   return (
@@ -34,5 +34,3 @@ function App() {
     </AuthProvider>
   );
 }
-
-export default App;
