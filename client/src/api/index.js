@@ -17,4 +17,19 @@ API.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+// Add a response interceptor
+API.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      // Clear invalid token
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default API;

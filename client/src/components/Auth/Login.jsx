@@ -18,7 +18,8 @@ function Login() {
     setLoading(true);
     try {
       const response = await API.post('/auth/login', formData);
-      login(response.data);
+      const { token, user } = response.data;
+      login({ token, ...user });
       toast.success('Logged in successfully!');
       navigate('/');
     } catch (err) {
@@ -67,5 +68,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;
