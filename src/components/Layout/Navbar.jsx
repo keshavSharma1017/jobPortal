@@ -18,7 +18,7 @@ function Navbar() {
             {user ? (
               <>
                 {user.role === 'recruiter' && (
-                  <Link to="/recruiter/dashboard\" className="text-gray-600 hover:text-gray-900 px-3 py-2">
+                  <Link to="/recruiter/dashboard\" className=\"text-gray-600 hover:text-gray-900 px-3 py-2">
                     Dashboard
                   </Link>
                 )}
