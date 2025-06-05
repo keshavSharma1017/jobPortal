@@ -14,6 +14,17 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET jobs posted by the logged-in recruiter
+router.get('/my-jobs', auth, async (req, res) => {
+  try {
+    const jobs = await JobPost.find({ createdBy: req.user.userId })
+      .sort({ createdAt: -1 });
+    res.json(jobs);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // GET single job by ID
 router.get('/:id', async (req, res) => {
   try {
