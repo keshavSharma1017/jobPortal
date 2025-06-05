@@ -40,8 +40,8 @@ function JobDetail() {
       setApplying(true);
       const response = await API.post('/applications', {
         jobId: id,
-        resume: 'Sample Resume', // In a real app, this would be a file upload
-        coverLetter: 'Sample Cover Letter' // In a real app, this would be user input
+        resume: 'Sample Resume',
+        coverLetter: 'Sample Cover Letter'
       });
 
       if (response.data) {
@@ -50,7 +50,12 @@ function JobDetail() {
       }
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast.error(error.response?.data?.message || 'Failed to submit application');
+      if (error.response?.status === 401) {
+        toast.error('Please login again to continue');
+        navigate('/login');
+      } else {
+        toast.error(error.response?.data?.message || 'Failed to submit application');
+      }
     } finally {
       setApplying(false);
     }

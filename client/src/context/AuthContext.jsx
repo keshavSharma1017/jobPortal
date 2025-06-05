@@ -6,21 +6,20 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Check for saved user data on component mount
+    // Check for saved user data and token on component mount
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
+    const savedToken = localStorage.getItem('token');
+    if (savedUser && savedToken) {
       const userData = JSON.parse(savedUser);
-      setUser(userData);
+      setUser({ ...userData, token: savedToken });
     }
   }, []);
 
   const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-    // Store token separately for easier access
-    if (userData.token) {
-      localStorage.setItem('token', userData.token);
-    }
+    const { token, ...userInfo } = userData;
+    setUser({ ...userInfo, token });
+    localStorage.setItem('user', JSON.stringify(userInfo));
+    localStorage.setItem('token', token);
   };
 
   const logout = () => {
