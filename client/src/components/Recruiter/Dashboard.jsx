@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import API from '../../api';
 
 function RecruiterDashboard() {
   const [postedJobs, setPostedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPostedJobs = async () => {
@@ -22,6 +24,10 @@ function RecruiterDashboard() {
     fetchPostedJobs();
   }, []);
 
+  const handlePostNewJob = () => {
+    navigate('/recruiter/post-job');
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -34,7 +40,10 @@ function RecruiterDashboard() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Recruiter Dashboard</h1>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <button 
+          onClick={handlePostNewJob}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
           Post New Job
         </button>
       </div>
