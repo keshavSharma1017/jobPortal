@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 import Login from './components/Auth/Login';
@@ -29,6 +31,7 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          <ToastContainer position="bottom-right" />
         </div>
       </Router>
     </AuthProvider>
