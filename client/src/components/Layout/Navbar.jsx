@@ -19,7 +19,7 @@ function Navbar() {
           {user ? (
             <>
               {user.role === 'recruiter' && (
-                <Link to="/recruiter/dashboard" className="nav-link">
+                <Link to="/recruiter/dashboard\" className="nav-link">
                   Dashboard
                 </Link>
               )}
