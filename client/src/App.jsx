@@ -20,6 +20,7 @@ import './styles/auth.css';
 import './styles/navbar.css';
 import './styles/profile.css';
 import './styles/job-detail.css';
+import './styles/job-list.css';
 import './styles/footer.css';
 
 function App() {

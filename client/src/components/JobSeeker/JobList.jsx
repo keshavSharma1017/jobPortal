@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { MapPin, Clock, Building, ArrowRight, Briefcase } from 'lucide-react';
 import API from '../../api';
 
 function JobList() {
@@ -27,45 +28,113 @@ function JobList() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading jobs...</div>
+      <div className="job-list-container">
+        <div className="loading-state">
+          <div className="loading-spinner-large"></div>
+          <p className="loading-text">Discovering amazing opportunities...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-red-500 text-center">{error}</div>
+      <div className="job-list-container">
+        <div className="error-state">
+          <div className="error-icon">
+            <Briefcase size={48} />
+          </div>
+          <h2 className="error-title">Oops! Something went wrong</h2>
+          <p className="error-message">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="retry-button"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Available Jobs</h1>
-      <div className="grid gap-6">
+    <div className="job-list-container">
+      <div className="job-list-header">
+        <div className="header-content">
+          <h1 className="page-title">
+            <Briefcase className="title-icon" size={32} />
+            Discover Your Next Opportunity
+          </h1>
+          <p className="page-subtitle">
+            Explore {jobs.length} amazing job opportunities waiting for you
+          </p>
+        </div>
+      </div>
+
+      <div className="jobs-grid">
         {jobs && jobs.length > 0 ? (
           jobs.map(job => (
-            <div key={job._id} className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold mb-2">{job.title}</h2>
-              <p className="text-gray-600 mb-2">{job.company}</p>
-              <div className="flex items-center text-gray-500 mb-4">
-                <span>{job.location}</span>
-                <span className="mx-2">•</span>
-                <span>{job.type}</span>
+            <div key={job._id} className="job-card-enhanced">
+              <div className="job-card-header">
+                <div className="company-logo">
+                  <Building size={24} />
+                </div>
+                <div className="job-badge">
+                  {job.type}
+                </div>
               </div>
-              <Link
-                to={`/jobs/${job._id}`}
-                className="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-              >
-                View Details
-              </Link>
+              
+              <div className="job-card-content">
+                <h2 className="job-title-enhanced">{job.title}</h2>
+                <p className="job-company-enhanced">{job.company}</p>
+                
+                <div className="job-meta-enhanced">
+                  <div className="meta-item">
+                    <MapPin size={16} />
+                    <span>{job.location}</span>
+                  </div>
+                  <div className="meta-item">
+                    <Clock size={16} />
+                    <span>{job.type}</span>
+                  </div>
+                </div>
+
+                {job.description && (
+                  <p className="job-preview">
+                    {job.description.length > 120 
+                      ? `${job.description.substring(0, 120)}...` 
+                      : job.description
+                    }
+                  </p>
+                )}
+              </div>
+
+              <div className="job-card-footer">
+                <Link
+                  to={`/jobs/${job._id}`}
+                  className="view-details-button"
+                >
+                  <span>View Details</span>
+                  <ArrowRight size={18} className="button-arrow" />
+                </Link>
+              </div>
             </div>
           ))
         ) : (
-          <div className="text-center text-gray-500">
-            No jobs available at the moment.
+          <div className="empty-state">
+            <div className="empty-icon">
+              <Briefcase size={64} />
+            </div>
+            <h2 className="empty-title">No Jobs Available</h2>
+            <p className="empty-message">
+              We're working hard to bring you new opportunities. Check back soon!
+            </p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="refresh-button"
+            >
+              Refresh Jobs
+            </button>
           </div>
         )}
       </div>
