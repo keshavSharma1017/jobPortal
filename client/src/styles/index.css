@@ -58,16 +58,3 @@ body {
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-
-/* Footer specific styles */
-.footer {
-  background-color: #1f2937 !important;
-  color: #ffffff !important;
-  padding: 1.5rem 0;
-  margin-top: auto;
-}
-
-.footer p {
-  color: #ffffff !important;
-  margin: 0;
-}
