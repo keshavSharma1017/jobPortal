@@ -17,17 +17,19 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: 'http://127.0.0.1:5173',
+  origin: process.env.CLIENT_URL || 'http://127.0.0.1:5173',
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Add request logging middleware
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`, req.body);
-  next();
-});
+// Add request logging middleware (only in development)
+if (process.env.NODE_ENV === 'development') {
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`, req.body);
+    next();
+  });
+}
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -37,31 +39,53 @@ app.use('/api/admin', adminRoutes);
 
 // Test route
 app.get('/', (req, res) => {
-  res.json({ message: 'Job Portal API is running' });
+  res.json({ 
+    message: 'Job Portal API is running',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV
+  });
 });
 
 // 404 handler
 app.use('*', (req, res) => {
-  console.log('404 - Route not found:', req.method, req.originalUrl);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('404 - Route not found:', req.method, req.originalUrl);
+  }
   res.status(404).json({ message: `Route ${req.method} ${req.originalUrl} not found` });
 });
 
 // Error handler
 app.use((error, req, res, next) => {
   console.error('Server error:', error);
-  res.status(500).json({ message: 'Internal server error', error: error.message });
+  res.status(500).json({ 
+    message: 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { error: error.message })
+  });
 });
 
 const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, '127.0.0.1', () => {
   console.log(`Server running on http://127.0.0.1:${PORT}`);
-  console.log('Available routes:');
-  console.log('- POST /api/auth/register');
-  console.log('- POST /api/auth/login');
-  console.log('- GET /api/auth/profile');
-  console.log('- PUT /api/auth/profile');
-  console.log('- POST /api/auth/logout');
+  console.log(`Environment: ${process.env.NODE_ENV}`);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Available routes:');
+    console.log('- POST /api/auth/register');
+    console.log('- POST /api/auth/login');
+    console.log('- GET /api/auth/profile');
+    console.log('- PUT /api/auth/profile');
+    console.log('- POST /api/auth/logout');
+    console.log('- GET /health');
+  }
 });
 
 // Handle unhandled promise rejections
