@@ -15,6 +15,8 @@ import JobApplicants from './components/Recruiter/JobApplicants';
 import EditJob from './components/Recruiter/EditJob';
 import AdminDashboard from './components/Admin/Dashboard';
 import './styles/index.css';
+import './styles/auth.css';
+import './styles/navbar.css';
 
 function App() {
   return (
@@ -35,11 +37,22 @@ function App() {
               <Route path="/recruiter/jobs/:jobId/edit" element={<EditJob />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               {/* Catch all route - redirect to home */}
-              <Route path="*" element={<Navigate to="/\" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
           <Footer />
-          <ToastContainer position="bottom-right" />
+          <ToastContainer 
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </div>
       </Router>
     </AuthProvider>

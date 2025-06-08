@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
+import { Mail, Lock, User, Eye, EyeOff, UserPlus, Briefcase } from 'lucide-react';
 import API from '../../api';
 
 function Register() {
@@ -12,6 +13,7 @@ function Register() {
     role: 'jobseeker'
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -22,7 +24,7 @@ function Register() {
       const response = await API.post('/auth/register', formData);
       const { token, user } = response.data;
       login({ token, ...user });
-      toast.success('Registration successful!');
+      toast.success('Account created successfully!');
       navigate('/');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Registration failed');
@@ -32,64 +34,137 @@ function Register() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6">Register</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Name</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
-            />
+    <div className="auth-container">
+      <div className="auth-background"></div>
+      <div className="auth-content">
+        <div className="auth-card">
+          <div className="auth-header">
+            <div className="auth-icon">
+              <UserPlus size={32} />
+            </div>
+            <h1 className="auth-title">Create Account</h1>
+            <p className="auth-subtitle">Join our platform and start your journey</p>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Email</label>
-            <input
-              type="email"
-              className="w-full p-2 border rounded"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Password</label>
-            <input
-              type="password"
-              className="w-full p-2 border rounded"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 mb-2">Role</label>
-            <select
-              className="w-full p-2 border rounded"
-              value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="input-group">
+              <label className="input-label">Full Name</label>
+              <div className="input-wrapper">
+                <User className="input-icon" size={20} />
+                <input
+                  type="text"
+                  className="auth-input"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">Email Address</label>
+              <div className="input-wrapper">
+                <Mail className="input-icon" size={20} />
+                <input
+                  type="email"
+                  className="auth-input"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">Password</label>
+              <div className="input-wrapper">
+                <Lock className="input-icon" size={20} />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className="auth-input"
+                  placeholder="Create a strong password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">Account Type</label>
+              <div className="role-selector">
+                <label className={`role-option ${formData.role === 'jobseeker' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="jobseeker"
+                    checked={formData.role === 'jobseeker'}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  />
+                  <div className="role-content">
+                    <User size={24} />
+                    <div>
+                      <div className="role-title">Job Seeker</div>
+                      <div className="role-description">Looking for opportunities</div>
+                    </div>
+                  </div>
+                </label>
+                <label className={`role-option ${formData.role === 'recruiter' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="recruiter"
+                    checked={formData.role === 'recruiter'}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  />
+                  <div className="role-content">
+                    <Briefcase size={24} />
+                    <div>
+                      <div className="role-title">Recruiter</div>
+                      <div className="role-description">Hiring talented people</div>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className={`auth-button ${loading ? 'loading' : ''}`}
+              disabled={loading}
             >
-              <option value="jobseeker">Job Seeker</option>
-              <option value="recruiter">Recruiter</option>
-            </select>
+              {loading ? (
+                <div className="loading-spinner"></div>
+              ) : (
+                <>
+                  <UserPlus size={20} />
+                  Create Account
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            <p className="auth-link-text">
+              Already have an account?{' '}
+              <Link to="/login" className="auth-link">
+                Sign in here
+              </Link>
+            </p>
           </div>
-          <button
-            type="submit"
-            className={`w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={loading}
-          >
-            {loading ? 'Registering...' : 'Register'}
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Register
+export default Register;
