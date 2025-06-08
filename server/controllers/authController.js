@@ -2,6 +2,25 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 
+// Store refresh tokens (in production, use Redis or database)
+const refreshTokens = new Set();
+
+const generateTokens = (userId) => {
+  const accessToken = jwt.sign(
+    { userId },
+    process.env.JWT_SECRET,
+    { expiresIn: '15m' } // Short-lived access token
+  );
+
+  const refreshToken = jwt.sign(
+    { userId },
+    process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
+    { expiresIn: '7d' } // Long-lived refresh token
+  );
+
+  return { accessToken, refreshToken };
+};
+
 // Register new user
 export const register = async (req, res) => {
   try {
@@ -22,20 +41,18 @@ export const register = async (req, res) => {
       email,
       password: hashedPassword,
       name,
-      role: role || 'jobseeker' // Default role
+      role: role || 'jobseeker'
     });
 
     await user.save();
 
-    // Create JWT token
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
+    // Generate tokens
+    const { accessToken, refreshToken } = generateTokens(user._id);
+    refreshTokens.add(refreshToken);
 
     res.status(201).json({
-      token,
+      token: accessToken,
+      refreshToken,
       user: {
         id: user._id,
         email: user.email,
@@ -65,15 +82,13 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Create JWT token
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
+    // Generate tokens
+    const { accessToken, refreshToken } = generateTokens(user._id);
+    refreshTokens.add(refreshToken);
 
     res.json({
-      token,
+      token: accessToken,
+      refreshToken,
       user: {
         id: user._id,
         email: user.email,
@@ -86,10 +101,55 @@ export const login = async (req, res) => {
   }
 };
 
+// Refresh token
+export const refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'Refresh token required' });
+    }
+
+    if (!refreshTokens.has(refreshToken)) {
+      return res.status(403).json({ message: 'Invalid refresh token' });
+    }
+
+    try {
+      const decoded = jwt.verify(
+        refreshToken, 
+        process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET
+      );
+
+      // Generate new tokens
+      const { accessToken, refreshToken: newRefreshToken } = generateTokens(decoded.userId);
+      
+      // Remove old refresh token and add new one
+      refreshTokens.delete(refreshToken);
+      refreshTokens.add(newRefreshToken);
+
+      res.json({
+        token: accessToken,
+        refreshToken: newRefreshToken
+      });
+    } catch (err) {
+      refreshTokens.delete(refreshToken);
+      return res.status(403).json({ message: 'Invalid refresh token' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 // Logout user
 export const logout = async (req, res) => {
   try {
-    // Since we're using JWT, we just need to tell the client to remove the token
+    const { refreshToken } = req.body;
+    
+    // Remove refresh token from store
+    if (refreshToken) {
+      refreshTokens.delete(refreshToken);
+    }
+
     res.json({ message: 'Logged out successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

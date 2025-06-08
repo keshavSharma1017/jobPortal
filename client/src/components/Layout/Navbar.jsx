@@ -1,12 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Briefcase, User, Shield, FileText, LogOut, Settings } from 'lucide-react';
 
 function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if logout fails, clear local data and redirect
+      navigate('/login');
+    }
   };
 
   return (
@@ -18,21 +25,21 @@ function Navbar() {
         </Link>
         
         <div className="nav-links">
-          {user ? (
+          {isAuthenticated() ? (
             <>
               <div className="nav-user-info">
-                <span className="nav-user-name">Welcome, {user.name}</span>
-                <span className="nav-user-role">{user.role}</span>
+                <span className="nav-user-name">Welcome, {user?.name}</span>
+                <span className="nav-user-role">{user?.role}</span>
               </div>
               
-              {user.role === 'recruiter' && (
+              {user?.role === 'recruiter' && (
                 <Link to="/recruiter/dashboard" className="nav-link">
                   <User size={18} />
                   Dashboard
                 </Link>
               )}
               
-              {user.role === 'admin' && (
+              {user?.role === 'admin' && (
                 <Link to="/admin/dashboard" className="nav-link">
                   <Shield size={18} />
                   Admin

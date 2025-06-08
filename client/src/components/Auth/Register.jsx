@@ -20,14 +20,18 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
       const response = await API.post('/auth/register', formData);
-      const { token, user } = response.data;
-      login({ token, ...user });
+      const { token, refreshToken, user } = response.data;
+      
+      login({ token, refreshToken, ...user });
       toast.success('Account created successfully!');
       navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed');
+      console.error('Registration error:', err);
+      const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -58,6 +62,7 @@ function Register() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -73,6 +78,7 @@ function Register() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -88,11 +94,13 @@ function Register() {
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   required
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -109,6 +117,7 @@ function Register() {
                     value="jobseeker"
                     checked={formData.role === 'jobseeker'}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    disabled={loading}
                   />
                   <div className="role-content">
                     <User size={24} />
@@ -125,6 +134,7 @@ function Register() {
                     value="recruiter"
                     checked={formData.role === 'recruiter'}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    disabled={loading}
                   />
                   <div className="role-content">
                     <Briefcase size={24} />

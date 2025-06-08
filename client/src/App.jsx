@@ -15,6 +15,7 @@ import JobApplicants from './components/Recruiter/JobApplicants';
 import EditJob from './components/Recruiter/EditJob';
 import AdminDashboard from './components/Admin/Dashboard';
 import Profile from './components/Profile/Profile';
+import ProtectedRoute from './components/ProtectedRoute';
 import './styles/index.css';
 import './styles/auth.css';
 import './styles/navbar.css';
@@ -25,25 +26,65 @@ import './styles/footer.css';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <div className="app">
           <Navbar />
           <main className="main-content">
             <Routes>
+              {/* Public routes */}
               <Route path="/" element={<JobList />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/jobs/:id" element={<JobDetail />} />
-              <Route path="/applied-jobs" element={<AppliedJobs />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
-              <Route path="/recruiter/post-job" element={<PostJob />} />
-              <Route path="/recruiter/jobs/:jobId/applicants" element={<JobApplicants />} />
-              <Route path="/recruiter/jobs/:jobId/edit" element={<EditJob />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              
+              {/* Protected routes for authenticated users */}
+              <Route path="/applied-jobs" element={
+                <ProtectedRoute>
+                  <AppliedJobs />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
+              
+              {/* Recruiter-only routes */}
+              <Route path="/recruiter/dashboard" element={
+                <ProtectedRoute requiredRole="recruiter">
+                  <RecruiterDashboard />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/recruiter/post-job" element={
+                <ProtectedRoute requiredRole="recruiter">
+                  <PostJob />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/recruiter/jobs/:jobId/applicants" element={
+                <ProtectedRoute requiredRole="recruiter">
+                  <JobApplicants />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/recruiter/jobs/:jobId/edit" element={
+                <ProtectedRoute requiredRole="recruiter">
+                  <EditJob />
+                </ProtectedRoute>
+              } />
+              
+              {/* Admin-only routes */}
+              <Route path="/admin/dashboard" element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              
               {/* Catch all route - redirect to home */}
-              <Route path="*" element={<Navigate to="/\" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
           <Footer />
@@ -60,8 +101,8 @@ function App() {
             theme="light"
           />
         </div>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

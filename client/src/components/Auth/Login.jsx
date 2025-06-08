@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
@@ -13,19 +13,29 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
+
+  // Get the intended destination from location state
+  const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
       const response = await API.post('/auth/login', formData);
-      const { token, user } = response.data;
-      login({ token, ...user });
+      const { token, refreshToken, user } = response.data;
+      
+      login({ token, refreshToken, ...user });
       toast.success('Welcome back!');
-      navigate('/');
+      
+      // Navigate to intended destination or home
+      navigate(from, { replace: true });
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid credentials');
+      console.error('Login error:', err);
+      const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -56,6 +66,7 @@ function Login() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -71,11 +82,13 @@ function Login() {
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   required
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
