@@ -15,15 +15,32 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Middleware
+// Configure CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173'
+];
+
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-  origin: 'http://127.0.0.1:5173',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Add request logging middleware
+// Request logging middleware
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`, req.body);
   next();
@@ -52,10 +69,10 @@ app.use((error, req, res, next) => {
   res.status(500).json({ message: 'Internal server error', error: error.message });
 });
 
+// Start server
 const PORT = process.env.PORT || 5001;
-
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`Server running on http://127.0.0.1:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
   console.log('Available routes:');
   console.log('- POST /api/auth/register');
   console.log('- POST /api/auth/login');
@@ -67,6 +84,5 @@ app.listen(PORT, '127.0.0.1', () => {
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
   console.log(`Error: ${err.message}`);
-  // Close server & exit process
   process.exit(1);
 });
