@@ -1,20 +1,20 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from '../client/src/context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Navbar from './components/Layout/Navbar';
-import Footer from './components/Layout/Footer';
-import Login from './components/Auth/Login';
-import Register from './components/Auth/Register';
-import JobList from './components/JobSeeker/JobList';
-import JobDetail from './components/JobSeeker/JobDetail';
-import AppliedJobs from './components/JobSeeker/AppliedJobs';
-import RecruiterDashboard from './components/Recruiter/Dashboard';
-import PostJob from './components/Recruiter/PostJob';
-import JobApplicants from './components/Recruiter/JobApplicants';
-import EditJob from './components/Recruiter/EditJob';
-import AdminDashboard from './components/Admin/Dashboard';
-import Profile from './components/Profile/Profile';
+import Navbar from '../client/src/components/Layout/Navbar';
+import Footer from '../client/src/components/Layout/Footer';
+import Login from '../client/src/components/Auth/Login';
+import Register from '../client/src/components/Auth/Register';
+import JobList from '../client/src/components/JobSeeker/JobList';
+import JobDetail from '../client/src/components/JobSeeker/JobDetail';
+import AppliedJobs from '../client/src/components/JobSeeker/AppliedJobs';
+import RecruiterDashboard from '../client/src/components/Recruiter/Dashboard';
+import PostJob from '../client/src/components/Recruiter/PostJob';
+import JobApplicants from '../client/src/components/Recruiter/JobApplicants';
+import EditJob from '../client/src/components/Recruiter/EditJob';
+import AdminDashboard from '../client/src/components/Admin/Dashboard';
+import Profile from '../client/src/components/Profile/Profile';
 import './index.css';
 
 function App() {
@@ -37,7 +37,7 @@ function App() {
               <Route path="/recruiter/jobs/:jobId/edit" element={<EditJob />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               {/* Catch all route - redirect to home */}
-              <Route path="*" element={<Navigate to="/\" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
           <Footer />
