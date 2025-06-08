@@ -127,15 +127,23 @@ body {
   color: var(--text-color);
 }
 
-.footer {
-  background: #1f2937 !important;
-  color: white !important;
-  padding: 1.5rem;
-  text-align: center;
-  margin-top: auto;
+/* Footer with forced visibility */
+footer {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+  padding: 2rem 0 !important;
+  margin-top: auto !important;
+  border-top: 1px solid #374151 !important;
 }
 
-.footer p {
-  color: white !important;
-  margin: 0;
+footer p {
+  color: #ffffff !important;
+  margin: 0 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+}
+
+footer * {
+  color: #ffffff !important;
 }

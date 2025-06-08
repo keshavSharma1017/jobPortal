@@ -62,17 +62,21 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Footer specific styles */
+/* Override any conflicting footer styles */
 footer {
   background-color: #1f2937 !important;
   color: #ffffff !important;
-  border-top: 1px solid #374151;
+  border-top: 1px solid #374151 !important;
 }
 
 footer p {
   color: #ffffff !important;
-  font-size: 0.875rem;
-  opacity: 0.9;
+  font-size: 0.875rem !important;
+  opacity: 1 !important;
+}
+
+footer * {
+  color: #ffffff !important;
 }
 
 /* Navigation styles */
