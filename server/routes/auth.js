@@ -7,7 +7,6 @@ import {
   updateProfile, 
   refreshToken,
   forgotPassword,
-  resetPassword,
   changePassword
 } from '../controllers/authController.js';
 import auth from '../middleware/auth.js';
@@ -18,8 +17,7 @@ const router = express.Router();
 router.post('/register', register);
 router.post('/login', login);
 router.post('/refresh', refreshToken);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+router.post('/forgot-password', forgotPassword); // Simplified - no token needed
 
 // Protected routes (require authentication)
 router.post('/logout', logout); // No auth middleware needed for logout

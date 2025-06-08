@@ -1,82 +1,60 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Mail, ArrowLeft, Send } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, CheckCircle } from 'lucide-react';
 import API from '../../api';
 
 function ForgotPassword() {
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
   const [loading, setLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
+  const [showPasswords, setShowPasswords] = useState({
+    new: false,
+    confirm: false
+  });
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     
     try {
-      const response = await API.post('/auth/forgot-password', { email });
-      setEmailSent(true);
-      toast.success('Password reset instructions sent to your email');
-      
-      // For testing purposes - show the reset token
-      if (response.data.resetToken) {
-        console.log('Reset token:', response.data.resetToken);
-        toast.info(`Reset token (for testing): ${response.data.resetToken}`);
+      // Validate passwords match
+      if (formData.newPassword !== formData.confirmPassword) {
+        toast.error('Passwords do not match');
+        setLoading(false);
+        return;
       }
+
+      // Validate password strength
+      if (formData.newPassword.length < 6) {
+        toast.error('Password must be at least 6 characters long');
+        setLoading(false);
+        return;
+      }
+
+      await API.post('/auth/forgot-password', formData);
+      
+      toast.success('Password reset successfully! You can now login with your new password.');
+      navigate('/login');
     } catch (err) {
       console.error('Forgot password error:', err);
-      const errorMessage = err.response?.data?.message || 'Failed to send reset email. Please try again.';
+      const errorMessage = err.response?.data?.message || 'Failed to reset password. Please try again.';
       toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  if (emailSent) {
-    return (
-      <div className="auth-container">
-        <div className="auth-background"></div>
-        <div className="auth-content">
-          <div className="auth-card">
-            <div className="auth-header">
-              <div className="auth-icon">
-                <Mail size={32} />
-              </div>
-              <h1 className="auth-title">Check Your Email</h1>
-              <p className="auth-subtitle">
-                We've sent password reset instructions to {email}
-              </p>
-            </div>
-
-            <div className="text-center">
-              <p className="text-gray-600 mb-6">
-                If you don't see the email, check your spam folder or try again with a different email address.
-              </p>
-              
-              <div className="space-y-4">
-                <button
-                  onClick={() => {
-                    setEmailSent(false);
-                    setEmail('');
-                  }}
-                  className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-                >
-                  Try Different Email
-                </button>
-                
-                <Link
-                  to="/login"
-                  className="block w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors text-center"
-                >
-                  Back to Login
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const togglePasswordVisibility = (field) => {
+    setShowPasswords(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
 
   return (
     <div className="auth-container">
@@ -85,11 +63,11 @@ function ForgotPassword() {
         <div className="auth-card">
           <div className="auth-header">
             <div className="auth-icon">
-              <Mail size={32} />
+              <Lock size={32} />
             </div>
-            <h1 className="auth-title">Forgot Password?</h1>
+            <h1 className="auth-title">Reset Password</h1>
             <p className="auth-subtitle">
-              Enter your email address and we'll send you a link to reset your password
+              Enter your email and new password to reset your account
             </p>
           </div>
 
@@ -102,13 +80,75 @@ function ForgotPassword() {
                   type="email"
                   className="auth-input"
                   placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
                   disabled={loading}
                 />
               </div>
             </div>
+
+            <div className="input-group">
+              <label className="input-label">New Password</label>
+              <div className="input-wrapper">
+                <Lock className="input-icon" size={20} />
+                <input
+                  type={showPasswords.new ? 'text' : 'password'}
+                  className="auth-input"
+                  placeholder="Enter your new password"
+                  value={formData.newPassword}
+                  onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
+                  required
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => togglePasswordVisibility('new')}
+                  disabled={loading}
+                >
+                  {showPasswords.new ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">Confirm New Password</label>
+              <div className="input-wrapper">
+                <Lock className="input-icon" size={20} />
+                <input
+                  type={showPasswords.confirm ? 'text' : 'password'}
+                  className="auth-input"
+                  placeholder="Confirm your new password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  required
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => togglePasswordVisibility('confirm')}
+                  disabled={loading}
+                >
+                  {showPasswords.confirm ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Password requirements */}
+            {formData.newPassword && (
+              <div className="password-requirements">
+                <div className={`requirement ${formData.newPassword.length >= 6 ? 'met' : ''}`}>
+                  <CheckCircle size={16} />
+                  <span>At least 6 characters</span>
+                </div>
+                <div className={`requirement ${formData.newPassword === formData.confirmPassword && formData.confirmPassword ? 'met' : ''}`}>
+                  <CheckCircle size={16} />
+                  <span>Passwords match</span>
+                </div>
+              </div>
+            )}
 
             <button
               type="submit"
@@ -119,8 +159,8 @@ function ForgotPassword() {
                 <div className="loading-spinner"></div>
               ) : (
                 <>
-                  <Send size={20} />
-                  Send Reset Link
+                  <Lock size={20} />
+                  Reset Password
                 </>
               )}
             </button>
