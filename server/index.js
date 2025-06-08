@@ -74,8 +74,11 @@ app.use((error, req, res, next) => {
 
 const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`Server running on http://127.0.0.1:${PORT}`);
+// IMPORTANT: For Render deployment, bind to 0.0.0.0, not 127.0.0.1
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
+
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
   if (process.env.NODE_ENV === 'development') {
     console.log('Available routes:');
