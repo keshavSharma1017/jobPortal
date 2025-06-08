@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Briefcase, User, Shield, FileText, LogOut } from 'lucide-react';
+import { Briefcase, User, Shield, FileText, LogOut, Settings } from 'lucide-react';
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -42,6 +42,11 @@ function Navbar() {
               <Link to="/applied-jobs" className="nav-link">
                 <FileText size={18} />
                 My Applications
+              </Link>
+              
+              <Link to="/profile" className="nav-link">
+                <Settings size={18} />
+                My Profile
               </Link>
               
               <button onClick={handleLogout} className="nav-link logout-btn">

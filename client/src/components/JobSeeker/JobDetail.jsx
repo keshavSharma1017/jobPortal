@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { MapPin, Clock, Building, Send, ArrowLeft } from 'lucide-react';
 import API from '../../api';
 import { toast } from 'react-toastify';
 
@@ -63,7 +64,10 @@ function JobDetail() {
 
   if (loading) return (
     <div className="container mx-auto px-4 py-8">
-      <div className="text-center">Loading job details...</div>
+      <div className="text-center">
+        <div className="loading-spinner mx-auto mb-4"></div>
+        <p>Loading job details...</p>
+      </div>
     </div>
   );
   
@@ -81,33 +85,70 @@ function JobDetail() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-4">{job.title}</h1>
-        <div className="mb-6">
-          <p className="text-xl text-gray-600">{job.company}</p>
-          <p className="text-gray-500">{job.location} • {job.type}</p>
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 transition-colors"
+      >
+        <ArrowLeft size={20} />
+        Back to Jobs
+      </button>
+
+      <div className="job-detail-card">
+        <div className="job-detail-header">
+          <div className="job-detail-title-section">
+            <h1 className="job-detail-title">{job.title}</h1>
+            <div className="job-detail-company">
+              <Building size={20} />
+              <span>{job.company}</span>
+            </div>
+          </div>
+          
+          <div className="job-detail-meta">
+            <div className="job-meta-item">
+              <MapPin size={18} />
+              <span>{job.location}</span>
+            </div>
+            <div className="job-meta-item">
+              <Clock size={18} />
+              <span>{job.type}</span>
+            </div>
+          </div>
         </div>
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Description</h2>
-          <p className="text-gray-700">{job.description}</p>
+
+        <div className="job-detail-content">
+          <div className="job-section">
+            <h2 className="job-section-title">Job Description</h2>
+            <p className="job-description">{job.description}</p>
+          </div>
+
+          {job.requirements && job.requirements.length > 0 && (
+            <div className="job-section">
+              <h2 className="job-section-title">Requirements</h2>
+              <ul className="job-requirements">
+                {job.requirements.map((req, index) => (
+                  <li key={index} className="job-requirement-item">{req}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Requirements</h2>
-          <ul className="list-disc list-inside text-gray-700">
-            {job.requirements?.map((req, index) => (
-              <li key={index}>{req}</li>
-            ))}
-          </ul>
+
+        <div className="job-detail-actions">
+          <button 
+            className={`apply-button ${applying ? 'loading' : ''}`}
+            onClick={handleApply}
+            disabled={applying}
+          >
+            {applying ? (
+              <div className="loading-spinner"></div>
+            ) : (
+              <>
+                <Send size={20} />
+                Apply Now
+              </>
+            )}
+          </button>
         </div>
-        <button 
-          className={`bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors ${
-            applying ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-          onClick={handleApply}
-          disabled={applying}
-        >
-          {applying ? 'Submitting...' : 'Apply Now'}
-        </button>
       </div>
     </div>
   );

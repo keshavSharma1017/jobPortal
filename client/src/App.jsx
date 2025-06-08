@@ -14,9 +14,12 @@ import PostJob from './components/Recruiter/PostJob';
 import JobApplicants from './components/Recruiter/JobApplicants';
 import EditJob from './components/Recruiter/EditJob';
 import AdminDashboard from './components/Admin/Dashboard';
+import Profile from './components/Profile/Profile';
 import './styles/index.css';
 import './styles/auth.css';
 import './styles/navbar.css';
+import './styles/profile.css';
+import './styles/job-detail.css';
 
 function App() {
   return (
@@ -31,13 +34,14 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/jobs/:id" element={<JobDetail />} />
               <Route path="/applied-jobs" element={<AppliedJobs />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
               <Route path="/recruiter/post-job" element={<PostJob />} />
               <Route path="/recruiter/jobs/:jobId/applicants" element={<JobApplicants />} />
               <Route path="/recruiter/jobs/:jobId/edit" element={<EditJob />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               {/* Catch all route - redirect to home */}
-              <Route path="*" element={<Navigate to="/\" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
           <Footer />
