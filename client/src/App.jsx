@@ -11,6 +11,8 @@ import JobDetail from './components/JobSeeker/JobDetail';
 import AppliedJobs from './components/JobSeeker/AppliedJobs';
 import RecruiterDashboard from './components/Recruiter/Dashboard';
 import PostJob from './components/Recruiter/PostJob';
+import JobApplicants from './components/Recruiter/JobApplicants';
+import EditJob from './components/Recruiter/EditJob';
 import AdminDashboard from './components/Admin/Dashboard';
 import './styles/index.css';
 
@@ -29,6 +31,8 @@ function App() {
               <Route path="/applied-jobs" element={<AppliedJobs />} />
               <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
               <Route path="/recruiter/post-job" element={<PostJob />} />
+              <Route path="/recruiter/jobs/:jobId/applicants" element={<JobApplicants />} />
+              <Route path="/recruiter/jobs/:jobId/edit" element={<EditJob />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
             </Routes>
           </main>

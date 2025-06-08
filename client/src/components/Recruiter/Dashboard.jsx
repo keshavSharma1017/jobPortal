@@ -28,6 +28,14 @@ function RecruiterDashboard() {
     navigate('/recruiter/post-job');
   };
 
+  const handleViewApplications = (jobId) => {
+    navigate(`/recruiter/jobs/${jobId}/applicants`);
+  };
+
+  const handleEditJob = (jobId) => {
+    navigate(`/recruiter/jobs/${jobId}/edit`);
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -57,10 +65,16 @@ function RecruiterDashboard() {
                 Posted on: {new Date(job.createdAt).toLocaleDateString()}
               </p>
               <div className="mt-4 space-x-4">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                <button 
+                  onClick={() => handleViewApplications(job._id)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
                   View Applications
                 </button>
-                <button className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                <button 
+                  onClick={() => handleEditJob(job._id)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                >
                   Edit Job
                 </button>
               </div>
