@@ -27,7 +27,8 @@ API.interceptors.response.use(
       // Clear token and user data on unauthorized
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // Redirect to login if needed
+      localStorage.clear();
+      // Force redirect to login
       window.location.href = '/login';
     }
     return Promise.reject(error);

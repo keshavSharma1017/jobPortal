@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,6 +34,8 @@ function App() {
               <Route path="/recruiter/jobs/:jobId/applicants" element={<JobApplicants />} />
               <Route path="/recruiter/jobs/:jobId/edit" element={<EditJob />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              {/* Catch all route - redirect to home */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
           <Footer />
