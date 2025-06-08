@@ -76,4 +76,44 @@ router.get('/my-applications', auth, async (req, res) => {
   }
 });
 
+// Update application status (Recruiter only)
+router.put('/:applicationId', auth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const { applicationId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(applicationId)) {
+      return res.status(400).json({ message: 'Invalid application ID format' });
+    }
+
+    if (!['pending', 'accepted', 'rejected'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status value' });
+    }
+
+    const application = await Application.findById(applicationId)
+      .populate('jobId', 'createdBy');
+
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+
+    // Check if the current user is the recruiter who posted the job
+    if (application.jobId.createdBy.toString() !== req.user.userId) {
+      return res.status(403).json({ message: 'Not authorized to update this application' });
+    }
+
+    application.status = status;
+    await application.save();
+
+    const updatedApplication = await Application.findById(applicationId)
+      .populate('userId', 'name email')
+      .populate('jobId', 'title company');
+
+    res.json(updatedApplication);
+  } catch (error) {
+    console.error('Error updating application status:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 export default router;
