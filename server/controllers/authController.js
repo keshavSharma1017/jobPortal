@@ -115,6 +115,13 @@ export const updateProfile = async (req, res) => {
     const { name, email } = req.body;
     const userId = req.user.userId;
 
+    console.log('Update profile request:', { userId, name, email });
+
+    // Validate input
+    if (!name || !email) {
+      return res.status(400).json({ message: 'Name and email are required' });
+    }
+
     // Check if email is already taken by another user
     if (email) {
       const existingUser = await User.findOne({ 
@@ -130,8 +137,8 @@ export const updateProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { 
-        ...(name && { name }),
-        ...(email && { email })
+        name: name.trim(),
+        email: email.trim().toLowerCase()
       },
       { new: true, runValidators: true }
     ).select('-password');
@@ -139,6 +146,8 @@ export const updateProfile = async (req, res) => {
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    console.log('Profile updated successfully:', updatedUser);
 
     res.json({
       message: 'Profile updated successfully',
@@ -150,6 +159,7 @@ export const updateProfile = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Error updating profile:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
