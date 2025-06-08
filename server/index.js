@@ -28,21 +28,13 @@ if (process.env.FRONTEND_URL) {
 
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: 'http://127.0.0.1:5173',
   credentials: true
 }));
-
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging middleware
+// Add request logging middleware
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`, req.body);
   next();
@@ -71,10 +63,10 @@ app.use((error, req, res, next) => {
   res.status(500).json({ message: 'Internal server error', error: error.message });
 });
 
-// Start server
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${PORT}`);
+
+app.listen(PORT, '127.0.0.1', () => {
+  console.log(`Server running on http://127.0.0.1:${PORT}`);
   console.log('Available routes:');
   console.log('- POST /api/auth/register');
   console.log('- POST /api/auth/login');
@@ -86,5 +78,6 @@ app.listen(PORT, '0.0.0.0', () => {
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
   console.log(`Error: ${err.message}`);
+  // Close server & exit process
   process.exit(1);
 });
