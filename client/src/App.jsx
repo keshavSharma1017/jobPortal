@@ -15,7 +15,13 @@ import JobApplicants from './components/Recruiter/JobApplicants';
 import EditJob from './components/Recruiter/EditJob';
 import AdminDashboard from './components/Admin/Dashboard';
 import Profile from './components/Profile/Profile';
-import './index.css';
+import './styles/index.css';
+import './styles/auth.css';
+import './styles/navbar.css';
+import './styles/profile.css';
+import './styles/job-detail.css';
+import './styles/job-list.css';
+import './styles/footer.css';
 
 function App() {
   return (
