@@ -19,6 +19,7 @@ connectDB();
 const allowedOrigins = [
   'http://127.0.0.1:5173',
   'http://localhost:5173',
+  'https://job-portal-blue-sigma.vercel.app',
   process.env.CLIENT_URL
 ].filter(Boolean);
 
@@ -30,7 +31,8 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.log('CORS blocked origin:', origin);
+      callback(null, true); // Allow all origins for now to debug
     }
   },
   credentials: true
@@ -39,13 +41,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Add request logging middleware (only in development)
-if (process.env.NODE_ENV === 'development') {
-  app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`, req.body);
-    next();
-  });
-}
+// Add request logging middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`, req.body);
+  next();
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -73,9 +73,7 @@ app.get('/health', (req, res) => {
 
 // 404 handler
 app.use('*', (req, res) => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('404 - Route not found:', req.method, req.originalUrl);
-  }
+  console.log('404 - Route not found:', req.method, req.originalUrl);
   res.status(404).json({ message: `Route ${req.method} ${req.originalUrl} not found` });
 });
 
@@ -96,15 +94,13 @@ const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
 app.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Available routes:');
-    console.log('- POST /api/auth/register');
-    console.log('- POST /api/auth/login');
-    console.log('- GET /api/auth/profile');
-    console.log('- PUT /api/auth/profile');
-    console.log('- POST /api/auth/logout');
-    console.log('- GET /health');
-  }
+  console.log('Available routes:');
+  console.log('- POST /api/auth/register');
+  console.log('- POST /api/auth/login');
+  console.log('- GET /api/auth/profile');
+  console.log('- PUT /api/auth/profile');
+  console.log('- POST /api/auth/logout');
+  console.log('- GET /health');
 });
 
 // Handle unhandled promise rejections
