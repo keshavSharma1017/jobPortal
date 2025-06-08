@@ -35,7 +35,7 @@ function App() {
               <Route path="/recruiter/jobs/:jobId/applicants" element={<JobApplicants />} />
               <Route path="/recruiter/jobs/:jobId/edit" element={<EditJob />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to="/\" replace />} />
             </Routes>
           </main>
           <Footer />
