@@ -6,6 +6,8 @@ import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import ForgotPassword from './components/Auth/ForgotPassword';
+import ResetPassword from './components/Auth/ResetPassword';
 import JobList from './components/JobSeeker/JobList';
 import JobDetail from './components/JobSeeker/JobDetail';
 import AppliedJobs from './components/JobSeeker/AppliedJobs';
@@ -36,6 +38,8 @@ function App() {
               <Route path="/" element={<JobList />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/jobs/:id" element={<JobDetail />} />
               
               {/* Protected routes for authenticated users */}

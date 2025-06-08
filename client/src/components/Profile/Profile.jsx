@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { User, Mail, Briefcase, Save, Edit3, ArrowLeft } from 'lucide-react';
+import { User, Mail, Briefcase, Save, Edit3, ArrowLeft, Key } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import API from '../../api';
+import ChangePassword from './ChangePassword';
 
 function Profile() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -89,15 +91,26 @@ function Profile() {
               <h1 className="profile-title">My Profile</h1>
               <p className="profile-subtitle">Manage your account information</p>
             </div>
-            {!isEditing && (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="edit-button"
-              >
-                <Edit3 size={18} />
-                Edit Profile
-              </button>
-            )}
+            <div className="profile-actions">
+              {!isEditing && (
+                <>
+                  <button
+                    onClick={() => setShowChangePassword(true)}
+                    className="change-password-button"
+                  >
+                    <Key size={18} />
+                    Change Password
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="edit-button"
+                  >
+                    <Edit3 size={18} />
+                    Edit Profile
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="profile-form">
@@ -177,6 +190,11 @@ function Profile() {
           </form>
         </div>
       </div>
+
+      {/* Change Password Modal */}
+      {showChangePassword && (
+        <ChangePassword onClose={() => setShowChangePassword(false)} />
+      )}
     </div>
   );
 }

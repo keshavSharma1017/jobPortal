@@ -95,6 +95,12 @@ function Login() {
               </div>
             </div>
 
+            <div className="forgot-password-link">
+              <Link to="/forgot-password" className="text-blue-500 hover:text-blue-600 text-sm">
+                Forgot your password?
+              </Link>
+            </div>
+
             <button
               type="submit"
               className={`auth-button ${loading ? 'loading' : ''}`}
