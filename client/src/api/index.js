@@ -5,7 +5,6 @@ const API = axios.create({
   withCredentials: true
 });
 
-// Flag to prevent multiple refresh attempts
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -21,7 +20,6 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-// Add a request interceptor
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -35,7 +33,6 @@ API.interceptors.request.use(
   }
 );
 
-// Add a response interceptor for token refresh
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -43,7 +40,6 @@ API.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-        // If we're already refreshing, queue this request
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then(token => {
@@ -58,7 +54,6 @@ API.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Try to refresh the token
         const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
           const response = await axios.post(`${API.defaults.baseURL}/auth/refresh`, {
@@ -67,20 +62,17 @@ API.interceptors.response.use(
 
           const { token, refreshToken: newRefreshToken } = response.data;
           
-          // Update stored tokens
           localStorage.setItem('token', token);
           if (newRefreshToken) {
             localStorage.setItem('refreshToken', newRefreshToken);
           }
 
-          // Update default headers
           API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           originalRequest.headers.Authorization = `Bearer ${token}`;
 
           processQueue(null, token);
           isRefreshing = false;
 
-          // Retry the original request
           return API(originalRequest);
         } else {
           throw new Error('No refresh token available');
@@ -89,16 +81,13 @@ API.interceptors.response.use(
         processQueue(refreshError, null);
         isRefreshing = false;
         
-        // Clear all auth data and redirect to login
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
         localStorage.clear();
         
-        // Dispatch custom event for logout
         window.dispatchEvent(new CustomEvent('auth:logout'));
         
-        // Only redirect if we're not already on login/register page
         const currentPath = window.location.pathname;
         if (currentPath !== '/login' && currentPath !== '/register') {
           window.location.href = '/login';
@@ -108,7 +97,6 @@ API.interceptors.response.use(
       }
     }
 
-    // For other errors, just reject
     return Promise.reject(error);
   }
 );

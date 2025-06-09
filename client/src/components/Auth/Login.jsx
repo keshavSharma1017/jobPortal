@@ -16,7 +16,6 @@ function Login() {
   const location = useLocation();
   const { login } = useAuth();
 
-  // Get the intended destination from location state
   const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
@@ -30,10 +29,8 @@ function Login() {
       login({ token, refreshToken, ...user });
       toast.success('Welcome back!');
       
-      // Navigate to intended destination or home
       navigate(from, { replace: true });
     } catch (err) {
-      console.error('Login error:', err);
       const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
       toast.error(errorMessage);
     } finally {

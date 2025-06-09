@@ -15,7 +15,6 @@ function RecruiterDashboard() {
         setPostedJobs(response.data);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching posted jobs:', err);
         toast.error('Failed to fetch your posted jobs');
         setLoading(false);
       }

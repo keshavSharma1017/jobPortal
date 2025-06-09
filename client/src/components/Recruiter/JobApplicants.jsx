@@ -13,16 +13,13 @@ function JobApplicants() {
   useEffect(() => {
     const fetchJobAndApplications = async () => {
       try {
-        // Fetch job details
         const jobResponse = await API.get(`/jobs/${jobId}`);
         setJob(jobResponse.data);
 
-        // Fetch applications for this job
         const applicationsResponse = await API.get(`/applications/job/${jobId}`);
         setApplications(applicationsResponse.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching job applications:', error);
         toast.error('Failed to fetch job applications');
         setLoading(false);
       }
@@ -35,14 +32,12 @@ function JobApplicants() {
     try {
       await API.put(`/applications/${applicationId}`, { status });
       
-      // Update local state
       setApplications(applications.map(app => 
         app._id === applicationId ? { ...app, status } : app
       ));
       
       toast.success(`Application ${status} successfully`);
     } catch (error) {
-      console.error('Error updating application status:', error);
       toast.error('Failed to update application status');
     }
   };

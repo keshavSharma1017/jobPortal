@@ -29,7 +29,6 @@ function Register() {
       toast.success('Account created successfully!');
       navigate('/');
     } catch (err) {
-      console.error('Registration error:', err);
       const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
       toast.error(errorMessage);
     } finally {

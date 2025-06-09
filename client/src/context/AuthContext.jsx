@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    // Check for saved user data and token on component mount
     const savedUser = localStorage.getItem('user');
     const savedToken = localStorage.getItem('token');
     
@@ -20,18 +19,15 @@ export const AuthProvider = ({ children }) => {
         const userData = JSON.parse(savedUser);
         setUser({ ...userData, token: savedToken });
       } catch (error) {
-        console.error('Error parsing saved user:', error);
         clearAuthData();
       }
     }
     setLoading(false);
   }, []);
 
-  // Listen for logout events from API interceptor
   useEffect(() => {
     const handleLogout = () => {
       setUser(null);
-      // Only show toast if we're not already on login/register page
       const currentPath = location.pathname;
       if (currentPath !== '/login' && currentPath !== '/register') {
         toast.info('Session expired. Please login again.');
@@ -63,7 +59,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      // Call logout endpoint to invalidate tokens on server
       const token = localStorage.getItem('token');
       if (token) {
         await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001/api'}/auth/logout`, {
@@ -75,13 +70,11 @@ export const AuthProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      console.error('Error during logout:', error);
+      // Ignore logout errors
     } finally {
-      // Clear local data regardless of server response
       setUser(null);
       clearAuthData();
       
-      // Navigate to login page
       navigate('/login', { replace: true });
       toast.success('Logged out successfully');
     }

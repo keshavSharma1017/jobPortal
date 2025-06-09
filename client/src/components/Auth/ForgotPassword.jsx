@@ -22,14 +22,12 @@ function ForgotPassword() {
     setLoading(true);
     
     try {
-      // Validate passwords match
       if (formData.newPassword !== formData.confirmPassword) {
         toast.error('Passwords do not match');
         setLoading(false);
         return;
       }
 
-      // Validate password strength
       if (formData.newPassword.length < 6) {
         toast.error('Password must be at least 6 characters long');
         setLoading(false);
@@ -41,7 +39,6 @@ function ForgotPassword() {
       toast.success('Password reset successfully! You can now login with your new password.');
       navigate('/login');
     } catch (err) {
-      console.error('Forgot password error:', err);
       const errorMessage = err.response?.data?.message || 'Failed to reset password. Please try again.';
       toast.error(errorMessage);
     } finally {
@@ -136,7 +133,6 @@ function ForgotPassword() {
               </div>
             </div>
 
-            {/* Password requirements */}
             {formData.newPassword && (
               <div className="password-requirements">
                 <div className={`requirement ${formData.newPassword.length >= 6 ? 'met' : ''}`}>

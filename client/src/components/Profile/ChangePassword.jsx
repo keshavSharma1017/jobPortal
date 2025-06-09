@@ -28,7 +28,6 @@ function ChangePassword({ onClose }) {
     setLoading(true);
     
     try {
-      // Validate new password
       const passwordError = validatePassword(formData.newPassword);
       if (passwordError) {
         toast.error(passwordError);
@@ -50,7 +49,6 @@ function ChangePassword({ onClose }) {
       toast.success('Password changed successfully!');
       onClose();
     } catch (err) {
-      console.error('Change password error:', err);
       const errorMessage = err.response?.data?.message || 'Failed to change password. Please try again.';
       toast.error(errorMessage);
     } finally {
@@ -147,7 +145,6 @@ function ChangePassword({ onClose }) {
             </div>
           </div>
 
-          {/* Password requirements */}
           {formData.newPassword && (
             <div className="password-requirements">
               <div className={`requirement ${formData.newPassword.length >= 6 ? 'met' : ''}`}>

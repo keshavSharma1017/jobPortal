@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 
 const router = express.Router();
 
-// Get all applications for a job (Recruiter only)
 router.get('/job/:jobId', auth, async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.jobId)) {
@@ -18,12 +17,10 @@ router.get('/job/:jobId', auth, async (req, res) => {
       
     res.json(applications);
   } catch (error) {
-    console.error('Error fetching job applications:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
-// Submit a new application
 router.post('/', auth, async (req, res) => {
   try {
     const { jobId, resume, coverLetter } = req.body;
@@ -32,7 +29,6 @@ router.post('/', auth, async (req, res) => {
       return res.status(400).json({ message: 'Invalid job ID format' });
     }
     
-    // Check if user already applied
     const existingApplication = await Application.findOne({
       jobId,
       userId: req.user.userId
@@ -57,12 +53,10 @@ router.post('/', auth, async (req, res) => {
 
     res.status(201).json(populatedApplication);
   } catch (error) {
-    console.error('Error submitting application:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
-// Get user's applications
 router.get('/my-applications', auth, async (req, res) => {
   try {
     const applications = await Application.find({ userId: req.user.userId })
@@ -71,12 +65,10 @@ router.get('/my-applications', auth, async (req, res) => {
       
     res.json(applications);
   } catch (error) {
-    console.error('Error fetching user applications:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
-// Update application status (Recruiter only)
 router.put('/:applicationId', auth, async (req, res) => {
   try {
     const { status } = req.body;
@@ -97,7 +89,6 @@ router.put('/:applicationId', auth, async (req, res) => {
       return res.status(404).json({ message: 'Application not found' });
     }
 
-    // Check if the current user is the recruiter who posted the job
     if (application.jobId.createdBy.toString() !== req.user.userId) {
       return res.status(403).json({ message: 'Not authorized to update this application' });
     }
@@ -111,7 +102,6 @@ router.put('/:applicationId', auth, async (req, res) => {
 
     res.json(updatedApplication);
   } catch (error) {
-    console.error('Error updating application status:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });

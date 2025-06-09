@@ -38,14 +38,12 @@ function Profile() {
         email: formData.email
       });
 
-      // Update the user context with new data
       const updatedUser = { ...user, ...response.data.user };
       login({ token: user.token, ...updatedUser });
       
       toast.success('Profile updated successfully!');
       setIsEditing(false);
     } catch (error) {
-      console.error('Error updating profile:', error);
       toast.error(error.response?.data?.message || 'Failed to update profile');
     } finally {
       setLoading(false);
@@ -191,7 +189,6 @@ function Profile() {
         </div>
       </div>
 
-      {/* Change Password Modal */}
       {showChangePassword && (
         <ChangePassword onClose={() => setShowChangePassword(false)} />
       )}

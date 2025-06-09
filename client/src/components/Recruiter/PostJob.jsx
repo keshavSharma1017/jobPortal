@@ -38,7 +38,6 @@ function PostJob() {
     setLoading(true);
 
     try {
-      // Filter out empty requirements
       const cleanedFormData = {
         ...formData,
         requirements: formData.requirements.filter(req => req.trim() !== '')
@@ -48,7 +47,6 @@ function PostJob() {
       toast.success('Job posted successfully!');
       navigate('/recruiter/dashboard');
     } catch (error) {
-      console.error('Error posting job:', error);
       toast.error(error.response?.data?.message || 'Failed to post job');
     } finally {
       setLoading(false);

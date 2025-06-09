@@ -14,7 +14,6 @@ function AppliedJobs() {
         setApplications(response.data);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching applications:', err);
         toast.error('Failed to fetch applications');
         setError('Failed to fetch applications');
         setLoading(false);

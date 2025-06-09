@@ -16,7 +16,6 @@ function JobList() {
         setJobs(response.data);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching jobs:', err);
         toast.error('Failed to fetch jobs');
         setError('Failed to fetch jobs');
         setLoading(false);

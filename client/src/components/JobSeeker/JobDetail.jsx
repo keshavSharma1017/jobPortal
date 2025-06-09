@@ -21,7 +21,6 @@ function JobDetail() {
         setJob(response.data);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching job details:', err);
         setError('Failed to fetch job details');
         setLoading(false);
       }
@@ -50,7 +49,6 @@ function JobDetail() {
         navigate('/applied-jobs');
       }
     } catch (error) {
-      console.error('Error submitting application:', error);
       if (error.response?.status === 401) {
         toast.error('Please login again to continue');
         navigate('/login');

@@ -32,7 +32,6 @@ function EditJob() {
         });
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching job:', error);
         toast.error('Failed to fetch job details');
         navigate('/recruiter/dashboard');
       }
@@ -64,7 +63,6 @@ function EditJob() {
     setSaving(true);
 
     try {
-      // Filter out empty requirements
       const cleanedFormData = {
         ...formData,
         requirements: formData.requirements.filter(req => req.trim() !== '')
@@ -74,7 +72,6 @@ function EditJob() {
       toast.success('Job updated successfully!');
       navigate('/recruiter/dashboard');
     } catch (error) {
-      console.error('Error updating job:', error);
       toast.error(error.response?.data?.message || 'Failed to update job');
     } finally {
       setSaving(false);
@@ -88,7 +85,6 @@ function EditJob() {
         toast.success('Job deleted successfully!');
         navigate('/recruiter/dashboard');
       } catch (error) {
-        console.error('Error deleting job:', error);
         toast.error('Failed to delete job');
       }
     }
