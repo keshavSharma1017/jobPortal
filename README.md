@@ -2,7 +2,7 @@
 
 A modern, responsive job portal application built with React and Node.js that connects job seekers with recruiters. Features user authentication, job posting, application management, and role-based access control.
 
-## 🌟 Features
+## Features
 
 - **Multi-Role Authentication**: Job seekers, recruiters, and administrators
 - **Job Management**: Post, edit, delete, and browse job listings
@@ -12,7 +12,7 @@ A modern, responsive job portal application built with React and Node.js that co
 - **Secure Authentication**: JWT-based authentication with refresh tokens
 - **Password Management**: Secure password reset and change functionality
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 job-portal/
@@ -46,7 +46,7 @@ job-portal/
 └── README.md                  # This file
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **React 18** - UI library
@@ -71,7 +71,7 @@ job-portal/
 - **PostCSS** - CSS processing
 - **Tailwind CSS** - Utility-first CSS framework
 
-## 🚀 Setup Instructions for Local Development
+## Setup Instructions for Local Development
 
 ### Prerequisites
 - Node.js (v16 or higher)
@@ -121,18 +121,15 @@ npm run dev
 - Backend API: http://127.0.0.1:5001
 - API Health Check: http://127.0.0.1:5001/health
 
-## 🔧 Environment Variables
+## Environment Variables
 
 ### Backend (.env)
 ```env
 # MongoDB Configuration
 MONGO_URI=mongodb://localhost:27017/jobportal
 # or for MongoDB Atlas:
-# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/jobportal
+# MONGO_URI=mongodb+srv://keshav:Apple%40123@jobportaldata.ahl1xgi.mongodb.net/
 
-# JWT Configuration
-JWT_SECRET=your_super_secure_jwt_secret_here_change_this_in_production
-JWT_REFRESH_SECRET=your_refresh_token_secret_here
 
 # Server Configuration
 PORT=5001
@@ -153,8 +150,8 @@ VITE_API_URL=http://127.0.0.1:5001/api
 #### Backend (.env)
 ```env
 MONGO_URI=your_production_mongodb_atlas_connection_string
-JWT_SECRET=your_super_secure_jwt_secret_minimum_32_characters
-JWT_REFRESH_SECRET=your_refresh_token_secret_different_from_jwt_secret
+JWT_SECRET=
+JWT_REFRESH_SECRET=
 PORT=5000
 NODE_ENV=production
 CLIENT_URL=https://your-frontend-domain.com
@@ -162,10 +159,10 @@ CLIENT_URL=https://your-frontend-domain.com
 
 #### Frontend (.env.production)
 ```env
-VITE_API_URL=https://your-backend-domain.com/api
+VITE_API_URL=https://jobportal-yk51.onrender.com/api
 ```
 
-## 🏗️ How to Run in Production
+##  How to Run in Production
 
 ### 1. Build the Frontend
 ```bash
@@ -181,38 +178,15 @@ cd server
 npm start
 ```
 
-### 3. Deployment Options
+### 3. Deployment Details
 
-#### Option A: Vercel (Frontend) + Render (Backend)
+####  Vercel (Frontend) + Render (Backend)
 1. **Frontend**: Deploy `client` folder to Vercel
 2. **Backend**: Deploy `server` folder to Render
 3. **Database**: Use MongoDB Atlas
 
-#### Option B: Heroku (Full Stack)
-```bash
-# Deploy backend
-git subtree push --prefix server heroku main
 
-# Deploy frontend separately or serve from backend
-```
-
-#### Option C: DigitalOcean/AWS
-1. Set up VPS/EC2 instance
-2. Install Node.js and MongoDB
-3. Clone repository and configure
-4. Use PM2 for process management
-5. Set up Nginx as reverse proxy
-
-### 4. Production Checklist
-- [ ] Set strong JWT secrets (minimum 32 characters)
-- [ ] Configure CORS for production domains
-- [ ] Enable HTTPS
-- [ ] Set up database backups
-- [ ] Configure logging
-- [ ] Set up monitoring
-- [ ] Enable rate limiting
-
-## 📚 API Documentation
+## API Documentation
 
 ### Authentication Endpoints
 ```
@@ -292,7 +266,7 @@ Authorization: Bearer <token>
 }
 ```
 
-## 👥 User Roles
+##  User Roles
 
 ### Job Seeker
 - Browse and search jobs
@@ -312,7 +286,7 @@ Authorization: Bearer <token>
 - View system analytics
 - Admin dashboard access
 
-## 🔒 Security Features
+## Security Features
 
 - JWT-based authentication with refresh tokens
 - Password hashing with bcrypt
@@ -321,7 +295,7 @@ Authorization: Bearer <token>
 - Rate limiting (recommended for production)
 - Secure HTTP headers (recommended for production)
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run frontend tests
@@ -333,7 +307,7 @@ cd server
 npm test
 ```
 
-## 📱 Browser Support
+## Browser Support
 
 - Chrome (latest)
 - Firefox (latest)
@@ -341,7 +315,7 @@ npm test
 - Edge (latest)
 - Mobile browsers (iOS Safari, Chrome Mobile)
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -349,30 +323,14 @@ npm test
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Author
 
-## 👨‍💻 Author
+**Keshav Sharma**
+- GitHub: https://github.com/keshavSharma1017
+- Email: keshavbusharma2001@gail.com
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
-
-## 🙏 Acknowledgments
-
-- React team for the amazing framework
-- Express.js community
-- MongoDB team
-- All open-source contributors
-
-## 📞 Support
-
-For support, email your.email@example.com or create an issue in the GitHub repository.
-
----
 
 **Live Demo**: [https://job-portal-blue-sigma.vercel.app/](https://job-portal-blue-sigma.vercel.app/)
 
-**Made with ❤️ using React, Node.js, and MongoDB**
+**Made with React, Node.js, and MongoDB**
